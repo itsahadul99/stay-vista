@@ -9,6 +9,7 @@ import { useSearchParams } from 'react-router-dom'
 const Rooms = () => {
   const axiosCommon = useAxiosCommon();
   // get the url query data 
+  // eslint-disable-next-line no-unused-vars
   const [params, setParams] = useSearchParams()
  const category = params.get('category');
   // get rooms data using tanstack query

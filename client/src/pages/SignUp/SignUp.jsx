@@ -27,6 +27,7 @@ const SignUp = () => {
       toast.success('Successfully sign up')
       navigate('/')
     } catch (error) {
+      setLoading(false)
       toast.error(error?.message)
     }
   }

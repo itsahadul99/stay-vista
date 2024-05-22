@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 import { DateRange } from "react-date-range"
 import { categories } from "../Categories/CategoriesData"
+import { TbFidgetSpinner } from "react-icons/tb"
 
-const AddRoomForm = ({handleDateRang, dates}) => {
-    
+const AddRoomForm = ({ handleDateRang, dates, handleSubmit, handleImageChange, imagePreview, imageText, loading }) => {
     return (
         <div className='w-full min-h-[calc(100vh-40px)] flex flex-col justify-center items-center text-gray-800 rounded-xl bg-gray-50'>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div className='grid grid-cols-1 lg:grid-cols-2 gap-10'>
                     <div className='space-y-6'>
                         <div className='space-y-1 text-sm'>
@@ -46,7 +46,7 @@ const AddRoomForm = ({handleDateRang, dates}) => {
                             </label>
                             {/* Calender */}
                             <DateRange
-                            rangeColors={['#F6657E']}
+                                rangeColors={['#F6657E']}
                                 editableDateInputs={true}
                                 onChange={item => handleDateRang(item)}
                                 moveRangeOnFirstSelection={false}
@@ -69,11 +69,12 @@ const AddRoomForm = ({handleDateRang, dates}) => {
                             />
                         </div>
 
-                        <div className=' p-4 bg-white w-full  m-auto rounded-lg'>
+                        <div className='flex items-center justify-around gap-4 p-4 bg-white w-full  m-auto rounded-lg'>
                             <div className='file_upload px-5 py-3 relative border-4 border-dotted border-gray-300 rounded-lg'>
                                 <div className='flex flex-col w-max mx-auto text-center'>
                                     <label>
                                         <input
+                                            onChange={e => handleImageChange(e.target.files[0])}
                                             className='text-sm cursor-pointer w-36 hidden'
                                             type='file'
                                             name='image'
@@ -82,10 +83,13 @@ const AddRoomForm = ({handleDateRang, dates}) => {
                                             hidden
                                         />
                                         <div className='bg-rose-500 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-rose-500'>
-                                            Upload Image
+                                            {imageText.split('.')[0].slice(0, 10) + '...' + imageText.split('.')[1]}
                                         </div>
                                     </label>
                                 </div>
+                            </div>
+                            <div className="">
+                                <img className="w-24 h-20" src={imagePreview} alt="" />
                             </div>
                         </div>
                         <div className='flex justify-between gap-2'>
@@ -163,10 +167,11 @@ const AddRoomForm = ({handleDateRang, dates}) => {
                 </div>
 
                 <button
+                    disabled={loading}
                     type='submit'
-                    className='w-full p-3 mt-5 text-center font-medium text-white transition duration-200 rounded shadow-md bg-rose-500'
+                    className='bg-rose-500 w-full rounded-md py-3 text-white text-center'
                 >
-                    Save & Continue
+                    {loading ? <TbFidgetSpinner className='animate-spin w-full mx-auto' /> : "Save & Continue"}
                 </button>
             </form>
         </div>

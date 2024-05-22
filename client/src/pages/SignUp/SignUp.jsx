@@ -4,6 +4,7 @@ import axios from 'axios'
 import useAuth from '../../hooks/useAuth'
 import toast from 'react-hot-toast'
 import { TbFidgetSpinner } from "react-icons/tb";
+import { imageUpload } from '../../api/utils'
 const SignUp = () => {
   const { createUser, signInWithGoogle, updateUserProfile, loading, setLoading } = useAuth()
   const location = useLocation()
@@ -15,16 +16,13 @@ const SignUp = () => {
     const email = form.email.value;
     const password = form.password.value;
     const image = form.image.files[0]
-    // set the image on form formate
-    const formData = new FormData()
-    formData.append('image', image)
     try {
       setLoading(true)
       // Upload image on imgbb
-      const { data } = await axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_API_IMGBB}`, formData)
+      const img_url = await imageUpload(image)
       // Register user
       await createUser(email, password)
-      await updateUserProfile(name, data.data.display_url)
+      await updateUserProfile(name, img_url)
       toast.success('Successfully sign up')
       navigate(location?.pathname ? location?.pathname : '/')
     } catch (error) {

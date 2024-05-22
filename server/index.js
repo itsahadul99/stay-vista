@@ -93,6 +93,13 @@ async function run() {
       const result = await roomsCollection.findOne({_id: new ObjectId(id)})
       res.send(result)
     })
+    // get specific user added room 
+    app.get('/my-listings/:email', async(req, res) => {
+      const email = req.params.email;
+      const query = {'host.email': email}
+      const result = await roomsCollection.find(query).toArray()
+      res.send(result)
+    })
     // Send a ping to confirm a successful connection
     await client.db('admin').command({ ping: 1 })
     console.log(

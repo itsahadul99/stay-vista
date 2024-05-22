@@ -4,7 +4,7 @@ import Sidebar from "../pages/Dashboard/Sidebar/Sidebar";
 const Dashboard = () => {
     return (
         <div className="flex">
-            <div className="py-5">
+            <div className="py-5 md:ml-64">
                 <Sidebar />
             </div>
             <div className="flex-1">

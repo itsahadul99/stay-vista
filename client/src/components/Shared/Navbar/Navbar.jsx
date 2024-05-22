@@ -47,6 +47,7 @@ const Navbar = () => {
                   <div className='hidden md:block'>
                     {/* Avatar */}
                     <img
+                      title={user?.displayName}
                       className='rounded-full'
                       referrerPolicy='no-referrer'
                       src={user && user.photoURL ? user.photoURL : avatarImg}
@@ -69,6 +70,13 @@ const Navbar = () => {
 
                     {user ? (
                       <>
+                        <div>
+                          <Link to='/dashboard'
+                          className='px-4 py-3 hover:bg-neutral-100 transition font-semibold cursor-pointer'
+                          >
+                            Dashboard
+                          </Link>
+                        </div>
                         <div
                           onClick={logOut}
                           className='px-4 py-3 hover:bg-neutral-100 transition font-semibold cursor-pointer'

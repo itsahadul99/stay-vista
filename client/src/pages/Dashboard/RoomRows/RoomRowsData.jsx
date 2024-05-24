@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import { format } from 'date-fns'
 import DeleteModal from '../../../components/DeleteModal/DeleteModal'
 import { useState } from 'react'
+// eslint-disable-next-line react/prop-types
 const RoomRowsData = ({ room, handleDelete}) => {
   const [isOpen, setIsOpen] = useState(false)
   const closeModal = () => {
@@ -58,7 +59,6 @@ const RoomRowsData = ({ room, handleDelete}) => {
           closeModal={closeModal}
           id={room?._id}
           handleDelete = {handleDelete}
-          id = {room?._id}
         />
       </td>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>

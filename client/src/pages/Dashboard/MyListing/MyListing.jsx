@@ -1,24 +1,40 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import useAxiosSecure from '../../../hooks/useAxiosSecure'
 import useAuth from '../../../hooks/useAuth'
 import RoomRowsData from '../RoomRows/RoomRowsData'
+import toast from 'react-hot-toast'
 
 const MyListing = () => {
-    const axiosSecure = useAxiosSecure()
-    const {user} = useAuth()
-    const {data: rooms = [],} = useQuery(
-        {
-          queryKey: ['rooms', user?.email],
-          queryFn: async() => {
-            const {data} = await axiosSecure(`/my-listings/${user?.email}`)
-            return data
-          }
-        }
-      )
-      const handleDelete = id => {
-        console.log(id);
-      }
+  const axiosSecure = useAxiosSecure()
+  const { user } = useAuth()
+  const { data: rooms = [], refetch } = useQuery(
+    {
+      queryKey: ['rooms', user?.email],
+      queryFn: async () => {
+        const { data } = await axiosSecure(`/my-listings/${user?.email}`)
+        return data
+      },
+    }
+    
+  )
+  const { mutateAsync } = useMutation({
+    mutationFn: async (id) => {
+      const { data } = await axiosSecure.delete(`/room/${id}`)
+      return data
+    },
+    onSuccess: () => {
+      refetch()
+      toast.success('Successfully delete this room')
+    }
+  })
+  const handleDelete = async id => {
+    try {
+      await mutateAsync(id)
+    } catch (error) {
+      toast.error(error?.message)
+    }
+  }
   return (
     <>
       <Helmet>
@@ -76,11 +92,11 @@ const MyListing = () => {
                   </tr>
                 </thead>
                 <tbody>
-                    {/* Room row data */}
-                    {
-                        rooms.map(room => <RoomRowsData key={room._id} room={room} handleDelete = {handleDelete} />)
-                    }
-                
+                  {/* Room row data */}
+                  {
+                    rooms.map(room => <RoomRowsData key={room._id} room={room} handleDelete={handleDelete} />)
+                  }
+
                 </tbody>
               </table>
             </div>

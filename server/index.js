@@ -93,6 +93,12 @@ async function run() {
       const result = await roomsCollection.findOne({_id: new ObjectId(id)})
       res.send(result)
     })
+    // delete the data
+    app.delete('/room/:id', async(req, res) => {
+      const id = req.params.id
+      const result = await roomsCollection.deleteOne({_id: new ObjectId(id)})
+      res.send(result)
+    })
     // get specific user added room 
     app.get('/my-listings/:email', async(req, res) => {
       const email = req.params.email;

@@ -85,7 +85,13 @@ async function run() {
       // if user already exists
       const query = { email: user?.email }
       const isExist = await usersCollection.findOne(query)
-      if (isExist) return res.send(isExist)
+      if (isExist) {
+        if(user?.status === 'Requested'){
+          const result = await usersCollection.updateOne(query, {$set: {status: user?.status}})
+          return res.send(result)
+        }
+        return res.send(isExist)
+      }
       const filter = { email: user?.email }
       const options = { upsert: true }
       const updateDoc = {

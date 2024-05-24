@@ -1,6 +1,12 @@
 import PropTypes from 'prop-types'
 import { format } from 'date-fns'
-const RoomRowsData = ({ room, }) => {
+import DeleteModal from '../../../components/DeleteModal/DeleteModal'
+import { useState } from 'react'
+const RoomRowsData = ({ room, handleDelete}) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const closeModal = () => {
+    setIsOpen(false)
+  }
   return (
     <tr>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
@@ -37,7 +43,7 @@ const RoomRowsData = ({ room, }) => {
       </td>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
         <button
-        //   onClick={() => setIsOpen(true)}
+          onClick={() => setIsOpen(true)}
           className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight'
         >
           <span
@@ -47,11 +53,13 @@ const RoomRowsData = ({ room, }) => {
           <span className='relative'>Delete</span>
         </button>
         {/* Delete modal */}
-        {/* <DeleteModal
+        <DeleteModal
           isOpen={isOpen}
           closeModal={closeModal}
           id={room?._id}
-        /> */}
+          handleDelete = {handleDelete}
+          id = {room?._id}
+        />
       </td>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
         <span className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight'>

@@ -16,6 +16,9 @@ const MyListing = () => {
           }
         }
       )
+      const handleDelete = id => {
+        console.log(id);
+      }
   return (
     <>
       <Helmet>
@@ -73,10 +76,9 @@ const MyListing = () => {
                   </tr>
                 </thead>
                 <tbody>
-                    
                     {/* Room row data */}
                     {
-                        rooms.map(room => <RoomRowsData key={room._id} room={room} />)
+                        rooms.map(room => <RoomRowsData key={room._id} room={room} handleDelete = {handleDelete} />)
                     }
                 
                 </tbody>

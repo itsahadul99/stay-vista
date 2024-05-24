@@ -23,7 +23,7 @@ const SignUp = () => {
       await createUser(email, password)
       await updateUserProfile(name, img_url)
       toast.success('Successfully sign up')
-      navigate(location?.pathname ? location?.pathname : '/')
+      navigate(location?.state ? location?.state : '/')
     } catch (error) {
       setLoading(false)
       toast.error(error?.message)
@@ -32,7 +32,7 @@ const SignUp = () => {
   const handleGoggleSignIn = async () => {
     try {
       await signInWithGoogle()
-      navigate(location?.pathname ? location?.pathname : '/')
+      navigate(location?.state ? location?.state : '/')
       toast("Successfully sign up")
     } catch (error) {
       toast.error(error?.message)

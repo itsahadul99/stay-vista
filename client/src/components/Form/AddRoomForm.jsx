@@ -81,6 +81,7 @@ const AddRoomForm = ({ handleDateRang, dates, handleSubmit, handleImageChange, i
                                             id='image'
                                             accept='image/*'
                                             hidden
+                                            required
                                         />
                                         <div className='bg-rose-500 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-rose-500'>
                                             {imageText.split('.')[0].slice(0, 10) + '...' + imageText.split('.')[1]}
@@ -169,7 +170,7 @@ const AddRoomForm = ({ handleDateRang, dates, handleSubmit, handleImageChange, i
                 <button
                     disabled={loading}
                     type='submit'
-                    className='bg-rose-500 w-full rounded-md py-3 text-white text-center'
+                    className='bg-rose-500 w-full rounded-md py-3 text-white text-center mt-3'
                 >
                     {loading ? <TbFidgetSpinner className='animate-spin w-full mx-auto' /> : "Save & Continue"}
                 </button>

@@ -49,6 +49,7 @@ async function run() {
   try {
 
     const roomsCollection = client.db('stayVista').collection('rooms')
+    const usersCollection = client.db('stayVista').collection('users')
     // auth related api
     app.post('/jwt', async (req, res) => {
       const user = req.body
@@ -78,31 +79,49 @@ async function run() {
         res.status(500).send(err)
       }
     })
+    // save a user on db
+    app.put('/user', async (req, res) => {
+      const user = req.body;
+      // if user already exists
+      const query = { email: user?.email }
+      const isExist = await usersCollection.findOne(query)
+      if (isExist) return res.send(isExist)
+      const filter = { email: user?.email }
+      const options = { upsert: true }
+      const updateDoc = {
+        $set: {
+          ...user,
+          timeStamp: Date.now()
+        }
+      }
+      const result = await usersCollection.updateOne(filter, updateDoc, options)
+      res.send(result)
+    })
     // get all the rooms and category wise rooms
-    app.get('/rooms', async(req, res) => {
+    app.get('/rooms', async (req, res) => {
       const category = req.query.category;
       let query = {}
-      if(category && category !== 'null') query = {category}
-      
+      if (category && category !== 'null') query = { category }
+
       const result = await roomsCollection.find(query).toArray()
       res.send(result)
     })
     // get single rooms for rooms details
-    app.get('/room/:id', async(req, res) => {
+    app.get('/room/:id', async (req, res) => {
       const id = req.params.id
-      const result = await roomsCollection.findOne({_id: new ObjectId(id)})
+      const result = await roomsCollection.findOne({ _id: new ObjectId(id) })
       res.send(result)
     })
     // delete the data
-    app.delete('/room/:id', async(req, res) => {
+    app.delete('/room/:id', async (req, res) => {
       const id = req.params.id
-      const result = await roomsCollection.deleteOne({_id: new ObjectId(id)})
+      const result = await roomsCollection.deleteOne({ _id: new ObjectId(id) })
       res.send(result)
     })
     // get specific user added room 
-    app.get('/my-listings/:email', async(req, res) => {
+    app.get('/my-listings/:email', async (req, res) => {
       const email = req.params.email;
-      const query = {'host.email': email}
+      const query = { 'host.email': email }
       const result = await roomsCollection.find(query).toArray()
       res.send(result)
     })
@@ -112,7 +131,7 @@ async function run() {
       'Pinged your deployment. You successfully connected to MongoDB!'
     )
     // add room data
-    app.post('/room', async(req, res) => {
+    app.post('/room', async (req, res) => {
       const roomData = req.body;
       const result = await roomsCollection.insertOne(roomData)
       res.send(result)

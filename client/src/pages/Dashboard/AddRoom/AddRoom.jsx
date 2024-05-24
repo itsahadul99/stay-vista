@@ -6,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 const AddRoom = () => {
     const { user } = useAuth()
     const [loading, setLoading] = useState(false)
@@ -84,6 +85,9 @@ const AddRoom = () => {
     }
     return (
         <div>
+            <Helmet>
+                <title>Add Rooms</title>
+            </Helmet>
             <AddRoomForm
                 handleDateRang={handleDateRang}
                 dates={dates}

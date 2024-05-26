@@ -8,8 +8,11 @@ import { GrLogout } from 'react-icons/gr'
 import useAuth from "../../../hooks/useAuth";
 import useRole from "../../../hooks/useRole";
 import MenuItem from "./Menu/MenuItem";
+import HostMenu from "./Menu/HostMenu";
+import GuestMenu from "./Menu/GuestMenu";
+import AdminMenu from "./Menu/AdminMenu";
 const Sidebar = () => {
-    const {logOut} = useAuth()
+    const { logOut } = useAuth()
     const [isActive, setActive] = useState(false)
     // Sidebar Responsive Handler
     const handleToggle = () => {
@@ -70,10 +73,9 @@ const Sidebar = () => {
                         <nav>
                             {/* Statistics */}
                             <MenuItem label="Statistics" address='/dashboard' icon={BsGraphUp} />
-                            {/* Add Room */}
-                            <MenuItem label="Add Room" address='add-room' icon={BsFillHouseAddFill} />
-                            {/* My Listing */}
-                            <MenuItem label="My Listings" address='my-listings' icon={MdHomeWork} />
+                            {role === 'guest' && <GuestMenu />}
+                            {role === 'host' && <HostMenu />}
+                            {role === 'admin' && <AdminMenu />}
                         </nav>
                     </div>
                 </div>

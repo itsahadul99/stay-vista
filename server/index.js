@@ -103,6 +103,12 @@ async function run() {
       const result = await usersCollection.updateOne(filter, updateDoc, options)
       res.send(result)
     })
+    // get user role 
+    app.get('/user/:email', async(req, res) => {
+      const email = req.params.email;
+      const result = await usersCollection.findOne({email: email})
+      res.send(result)
+    })
     // get all the rooms and category wise rooms
     app.get('/rooms', async (req, res) => {
       const category = req.query.category;

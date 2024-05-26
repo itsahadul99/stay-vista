@@ -109,6 +109,10 @@ async function run() {
       const result = await usersCollection.findOne({email: email})
       res.send(result)
     })
+    app.get('/user', async(req, res) => {
+      const result = await usersCollection.find().toArray()
+      res.send(result)
+    })
     // get all the rooms and category wise rooms
     app.get('/rooms', async (req, res) => {
       const category = req.query.category;

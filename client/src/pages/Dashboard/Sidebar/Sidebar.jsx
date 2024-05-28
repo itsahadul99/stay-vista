@@ -11,12 +11,18 @@ import MenuItem from "./Menu/MenuItem";
 import HostMenu from "./Menu/HostMenu";
 import GuestMenu from "./Menu/GuestMenu";
 import AdminMenu from "./Menu/AdminMenu";
+import ToggleButton from "../../../components/Shared/Button/ToggleButton";
 const Sidebar = () => {
     const { logOut } = useAuth()
     const [isActive, setActive] = useState(false)
+    const [toggle, setToggle] = useState(true)
     // Sidebar Responsive Handler
     const handleToggle = () => {
         setActive(!isActive)
+    }
+    // handle toggle 
+    const toggleHandler = () => {
+        setToggle(!toggle)
     }
     const [role, isLoading] = useRole()
     return (
@@ -68,13 +74,15 @@ const Sidebar = () => {
                     {/* Nav Items */}
                     <div className='flex flex-col justify-between flex-1 mt-6'>
                         {/* Conditional toggle button here.. */}
-
+                        {
+                            role === 'host' && <ToggleButton toggleHandler={toggleHandler} toggle={toggle} />
+                        }
                         {/*  Menu Items */}
                         <nav>
                             {/* Statistics */}
                             <MenuItem label="Statistics" address='/dashboard' icon={BsGraphUp} />
                             {role === 'guest' && <GuestMenu />}
-                            {role === 'host' && <HostMenu />}
+                            {role === 'host' && toggle ? <HostMenu /> : <GuestMenu />}
                             {role === 'admin' && <AdminMenu />}
                         </nav>
                     </div>

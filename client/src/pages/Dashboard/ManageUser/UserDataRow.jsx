@@ -4,9 +4,11 @@ import UpdateUserModal from '../../../components/UpdateUserModal/UpdateUserModal
 import { useMutation } from '@tanstack/react-query';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import toast from 'react-hot-toast';
+import useAuth from '../../../hooks/useAuth';
 const UserDataRow = ({ user, refetch }) => {
   const [isOpen, setIsOpen] = useState(false)
   const axiosSecure = useAxiosSecure()
+  const {user: loggedInUser} = useAuth()
   const { mutateAsync } = useMutation({
     mutationFn: async (updateInfo) => {
       const { data } = await axiosSecure.patch(`/user/update/${user?.email}`, updateInfo)
@@ -52,7 +54,7 @@ const UserDataRow = ({ user, refetch }) => {
       </td>
 
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <button onClick={() => setIsOpen(true)} className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight'>
+        <button disabled={(loggedInUser?.email === user?.email)}title={loggedInUser?.email === user?.email && "You can not change your own role"} onClick={() => setIsOpen(true)} className=' disabled:cursor-not-allowed relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight'>
           <span
             aria-hidden='true'
             className='absolute inset-0 bg-green-200 opacity-50 rounded-full'

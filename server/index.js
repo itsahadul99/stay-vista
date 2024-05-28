@@ -22,13 +22,11 @@ app.use(cookieParser())
 // Verify Token Middleware
 const verifyToken = async (req, res, next) => {
   const token = req.cookies?.token
-  console.log(token)
   if (!token) {
     return res.status(401).send({ message: 'unauthorized access' })
   }
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
-      console.log(err)
       return res.status(401).send({ message: 'unauthorized access' })
     }
     req.user = decoded
@@ -50,6 +48,14 @@ async function run() {
 
     const roomsCollection = client.db('stayVista').collection('rooms')
     const usersCollection = client.db('stayVista').collection('users')
+    // verify admin middleware
+    const verifyAdmin =async (req, res, next) => {
+      const user = req.user;
+      const query = {email: user?.email}
+      const result = await usersCollection.findOne(query)
+      if(!result || result?.role !== 'admin') return res.status(401).send({message: 'Unauthorized access'})
+      next()
+    }
     // auth related api
     app.post('/jwt', async (req, res) => {
       const user = req.body
@@ -122,7 +128,7 @@ async function run() {
       const result = await usersCollection.updateOne(filter, updateDoc)
       res.send(result)
     })
-    app.get('/user', async(req, res) => {
+    app.get('/users', verifyToken, verifyAdmin, async(req, res) => {
       const result = await usersCollection.find().toArray()
       res.send(result)
     })

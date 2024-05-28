@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { AiOutlineBars } from "react-icons/ai";
-import { BsFillHouseAddFill, BsGraphUp } from "react-icons/bs";
+import { BsGraphUp } from "react-icons/bs";
 import { FcSettings } from "react-icons/fc";
-import { MdHomeWork } from "react-icons/md";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { GrLogout } from 'react-icons/gr'
 import useAuth from "../../../hooks/useAuth";
 import useRole from "../../../hooks/useRole";
@@ -24,7 +23,7 @@ const Sidebar = () => {
     const toggleHandler = () => {
         setToggle(!toggle)
     }
-    const [role, isLoading] = useRole()
+    const [role] = useRole()
     return (
         <>
             {/* Small Screen Navbar */}
@@ -82,7 +81,7 @@ const Sidebar = () => {
                             {/* Statistics */}
                             <MenuItem label="Statistics" address='/dashboard' icon={BsGraphUp} />
                             {role === 'guest' && <GuestMenu />}
-                            {role === 'host' && toggle ? <HostMenu /> : <GuestMenu />}
+                            {role === 'host' ? toggle ? <HostMenu /> : <GuestMenu /> : undefined}
                             {role === 'admin' && <AdminMenu />}
                         </nav>
                     </div>

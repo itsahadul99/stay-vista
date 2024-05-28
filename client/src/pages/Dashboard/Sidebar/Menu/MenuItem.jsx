@@ -18,10 +18,10 @@ const MenuItem = ({ label, address, icon: Icon }) => {
     </NavLink>
   )
 }
+
 MenuItem.propTypes = {
   label: PropTypes.string,
   address: PropTypes.string,
   icon: PropTypes.elementType,
 }
-
 export default MenuItem

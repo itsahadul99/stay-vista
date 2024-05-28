@@ -48,14 +48,25 @@ async function run() {
 
     const roomsCollection = client.db('stayVista').collection('rooms')
     const usersCollection = client.db('stayVista').collection('users')
+
     // verify admin middleware
-    const verifyAdmin =async (req, res, next) => {
+    const verifyAdmin = async (req, res, next) => {
       const user = req.user;
-      const query = {email: user?.email}
+      const query = { email: user?.email }
       const result = await usersCollection.findOne(query)
-      if(!result || result?.role !== 'admin') return res.status(401).send({message: 'Unauthorized access'})
+      if (!result || result?.role !== 'admin') return res.status(401).send({ message: 'Unauthorized access' })
       next()
     }
+
+    // verify admin middleware
+    const verifyHost = async (req, res, next) => {
+      const user = req.user;
+      const query = { email: user?.email }
+      const result = await usersCollection.findOne(query)
+      if (!result || result?.role !== 'host') return res.status(401).send({ message: 'Unauthorized access' })
+      next()
+    }
+
     // auth related api
     app.post('/jwt', async (req, res) => {
       const user = req.body
@@ -92,8 +103,8 @@ async function run() {
       const query = { email: user?.email }
       const isExist = await usersCollection.findOne(query)
       if (isExist) {
-        if(user?.status === 'Requested'){
-          const result = await usersCollection.updateOne(query, {$set: {status: user?.status}})
+        if (user?.status === 'Requested') {
+          const result = await usersCollection.updateOne(query, { $set: { status: user?.status } })
           return res.send(result)
         }
         return res.send(isExist)
@@ -110,16 +121,16 @@ async function run() {
       res.send(result)
     })
     // get user role 
-    app.get('/user/:email', async(req, res) => {
+    app.get('/user/:email', async (req, res) => {
       const email = req.params.email;
-      const result = await usersCollection.findOne({email: email})
+      const result = await usersCollection.findOne({ email: email })
       res.send(result)
     })
     // update user role
-    app.patch('/user/update/:email', async(req, res) => {
+    app.patch('/user/update/:email', async (req, res) => {
       const email = req.params.email;
       const user = req.body;
-      const filter = {email: email}
+      const filter = { email: email }
       const updateDoc = {
         $set: {
           ...user, timeStamp: new Date()
@@ -128,7 +139,7 @@ async function run() {
       const result = await usersCollection.updateOne(filter, updateDoc)
       res.send(result)
     })
-    app.get('/users', verifyToken, verifyAdmin, async(req, res) => {
+    app.get('/users', verifyToken, verifyAdmin, async (req, res) => {
       const result = await usersCollection.find().toArray()
       res.send(result)
     })
@@ -148,13 +159,13 @@ async function run() {
       res.send(result)
     })
     // delete the data
-    app.delete('/room/:id', async (req, res) => {
+    app.delete('/room/:id', verifyToken, verifyHost, async (req, res) => {
       const id = req.params.id
       const result = await roomsCollection.deleteOne({ _id: new ObjectId(id) })
       res.send(result)
     })
     // get specific user added room 
-    app.get('/my-listings/:email', async (req, res) => {
+    app.get('/my-listings/:email', verifyToken, verifyHost, async (req, res) => {
       const email = req.params.email;
       const query = { 'host.email': email }
       const result = await roomsCollection.find(query).toArray()
@@ -166,7 +177,7 @@ async function run() {
       'Pinged your deployment. You successfully connected to MongoDB!'
     )
     // add room data
-    app.post('/room', async (req, res) => {
+    app.post('/room', verifyToken, verifyHost, async (req, res) => {
       const roomData = req.body;
       const result = await roomsCollection.insertOne(roomData)
       res.send(result)

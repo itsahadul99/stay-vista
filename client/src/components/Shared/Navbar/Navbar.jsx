@@ -7,11 +7,13 @@ import avatarImg from '../../../assets/images/placeholder.jpg'
 import HostRequestModal from '../../HostRequestModal/HostRequestModal'
 import toast from 'react-hot-toast';
 import useAxiosSecure from '../../../hooks/useAxiosSecure'
+import useRole from '../../../hooks/useRole'
 const Navbar = () => {
   const { user, logOut } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const [isHostModal, setIsHostModal] = useState(false)
   const axiosSecure = useAxiosSecure()
+  const [role] = useRole()
   const closeModal = () => {
     setIsHostModal(false)
   }
@@ -53,17 +55,17 @@ const Navbar = () => {
             <div className='relative'>
               <div className='flex flex-row items-center gap-3'>
                 {/* Become A Host btn */}
-                <div className='hidden md:block'>
+                { role === 'guest' &&
+                  <div className='hidden md:block'>
                   {(
                     <button
                       onClick={() => setIsHostModal(true)}
-                      // disabled={!user}
                       className='disabled:cursor-not-allowed cursor-pointer hover:bg-neutral-100 py-3 px-4 text-sm font-semibold rounded-full  transition'
                     >
                       Host your home
                     </button>
                   )}
-                </div>
+                </div>}
                 {/* Show a modal */}
                 <HostRequestModal isOpen={isHostModal} closeModal={closeModal} handleHostModal={handleHostModal} />
                 {/* Dropdown btn */}
